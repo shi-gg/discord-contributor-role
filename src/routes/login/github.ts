@@ -5,7 +5,7 @@ import { Routes } from "../../github/constants";
 import { REST } from "../../github/rest";
 import type { Contributor, RESTError, RESTGetAPIRepoContributorsResult, RESTGetAPIUserResult } from "../../github/types";
 import { discordCookie, githubCookie } from "../../jwt";
-import { assignDiscordRole, err, getRedirectUri, github } from "../../shared";
+import { assignDiscordRole, err, getRedirectUri, github, sendDiscordMessage } from "../../shared";
 
 export async function loginGithub(request: Request, env: Env) {
     const { host, searchParams } = new URL(request.url);
@@ -32,7 +32,10 @@ export async function loginGithub(request: Request, env: Env) {
     if (!contributors.some((contributor) => contributor.id === user.id)) return err(request, "You must be a contributor to the repository");
 
     try {
-        await env.db.prepare("INSERT INTO users (discord_id, github_id) VALUES (?, ?)").bind(discordUser.id, user.id).run();
+        if (!connection) {
+            await env.db.prepare("INSERT INTO users (discord_id, github_id) VALUES (?, ?)").bind(discordUser.id, user.id).run();
+            await sendDiscordMessage(env.DISCORD_CHANNEL_ID, `<@${discordUser.id}> **(${user.login})** is now a contributor!`);
+        }
     } catch (error) {
         console.error(error);
     }

@@ -1,4 +1,6 @@
 import { env } from "cloudflare:workers";
+import type { RESTPutAPIGuildMemberRoleResult } from "discord-api-types/v9";
+import type { RESTPostAPIChannelMessageJSONBody, RESTPostAPIChannelMessageResult } from "discord-api-types/v10";
 import { OAuth2Scopes, Routes } from "discord-api-types/v10";
 
 import { REST as DiscordREST } from "./discord/rest";
@@ -37,5 +39,9 @@ export function err(request: Request, message: string) {
 }
 
 export function assignDiscordRole(userId: string) {
-    return discord.put(Routes.guildMemberRole(env.DISCORD_SERVER_ID, userId, env.DISCORD_ROLE_ID));
+    return discord.put(Routes.guildMemberRole(env.DISCORD_SERVER_ID, userId, env.DISCORD_ROLE_ID)) as Promise<RESTPutAPIGuildMemberRoleResult>;
+}
+
+export function sendDiscordMessage(channelId: string, content: string) {
+    return discord.post(Routes.channelMessages(channelId), { body: { content } satisfies RESTPostAPIChannelMessageJSONBody }) as Promise<RESTPostAPIChannelMessageResult>;
 }
