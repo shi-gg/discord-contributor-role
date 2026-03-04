@@ -4,7 +4,7 @@ export interface RESTOptions {
     version: string;
 }
 
-export const DefaultUserAgent = "DiscordBot (https://github.com/shi-gg/discord-github-colab-role)";
+export const DefaultUserAgent = "DiscordBot (https://github.com/shi-gg/discord-contributor-role)";
 
 export const DefaultRestOptions = {
     api: "https://discord.com/api",

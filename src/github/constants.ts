@@ -1,6 +1,6 @@
 import type { RESTOptions, RouteLike } from "./types";
 
-export const DefaultUserAgent = "DiscordBot (https://github.com/shi-gg/discord-github-colab-role)";
+export const DefaultUserAgent = "DiscordBot (https://github.com/shi-gg/discord-contributor-role)";
 
 export const DefaultRestOptions = {
     api: "https://api.github.com",
